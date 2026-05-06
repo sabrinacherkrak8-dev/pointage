@@ -241,7 +241,9 @@ async function updateTable() {
             : "❌ Non pointé" }
     </td>
     <td>${calculerDuree(r.arrivee, r.depart)}</td>
-    <td><button onclick="deleteEntry('${r.arrivee.id}')">❌</button></td>
+    <td>
+<button onclick="deleteEntry('${r.arrivee?.id}', '${r.depart?.id}')">❌</button>
+</td>
 `;
 
         tableBody.appendChild(row);
@@ -249,9 +251,20 @@ async function updateTable() {
 }
 
 // 🗑️ SUPPRIMER
-window.deleteEntry = async function(id) {
-    if (confirm("Supprimer ?")) {
-        await deleteDoc(doc(db, "pointages", id));
+window.deleteEntry = async function(arriveeId, departId) {
+
+    if (confirm("Supprimer toute la ligne ?")) {
+
+        // supprimer arrivée
+        if (arriveeId) {
+            await deleteDoc(doc(db, "pointages", arriveeId));
+        }
+
+        // supprimer départ
+        if (departId) {
+            await deleteDoc(doc(db, "pointages", departId));
+        }
+
         updateTable();
     }
 };
