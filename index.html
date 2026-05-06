@@ -116,6 +116,7 @@ img {
 <th>Nom / Date</th>
 <th>Arrivée</th>
 <th>Départ</th>
+<th>Durée</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -237,9 +238,10 @@ async function updateTable() {
     <td>
         ${r.depart 
             ? `<img src="${r.depart.image}" onclick="openImage('${r.depart.image}')" style="cursor:pointer;"><br>${r.depart.time}` 
-            : "" }
+            : "❌ Non pointé" }
     </td>
-    <td><button onclick="deleteEntry('${r.id}')">❌</button></td>
+    <td>${calculerDuree(r.arrivee, r.depart)}</td>
+    <td><button onclick="deleteEntry('${r.arrivee.id}')">❌</button></td>
 `;
 
         tableBody.appendChild(row);
@@ -286,6 +288,17 @@ window.addEventListener("DOMContentLoaded", () => {
 window.openImage = function(src) {
     modal.style.display = "flex";
     modalImg.src = src;
+};
+function calculerDuree(arrivee, depart) {
+
+    if (!arrivee || !depart) return "⏳ En cours";
+
+    const diff = depart.timestamp - arrivee.timestamp;
+
+    const heures = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    return `${heures}h ${minutes}min`;
 };
 </script>
 <div id="imageModal" style="
