@@ -228,11 +228,19 @@ async function updateTable() {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${r.name}<br>${r.date}</td>
-            <td>${r.arrivee ? `<img src="${r.arrivee.image}"><br>${r.arrivee.time}` : ""}</td>
-            <td>${r.depart ? `<img src="${r.depart.image}"><br>${r.depart.time}` : ""}</td>
-            <td><button onclick="deleteEntry('${r.id}')">❌</button></td>
-        `;
+    <td>${r.name}<br>${r.date}</td>
+    <td>
+        ${r.arrivee 
+            ? `<img src="${r.arrivee.image}" onclick="openImage('${r.arrivee.image}')" style="cursor:pointer;"><br>${r.arrivee.time}` 
+            : "" }
+    </td>
+    <td>
+        ${r.depart 
+            ? `<img src="${r.depart.image}" onclick="openImage('${r.depart.image}')" style="cursor:pointer;"><br>${r.depart.time}` 
+            : "" }
+    </td>
+    <td><button onclick="deleteEntry('${r.id}')">❌</button></td>
+`;
 
         tableBody.appendChild(row);
     });
@@ -263,8 +271,30 @@ window.unlockManager = function() {
         alert("Code incorrect");
     }
 };
+const modal = document.getElementById("imageModal");
+const modalImg = document.getElementById("modalImg");
 
+window.openImage = function(src) {
+    modal.style.display = "flex";
+    modalImg.src = src;
+};
+
+modal.onclick = function() {
+    modal.style.display = "none";
+};
 </script>
-
+<div id="imageModal" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+">
+    <img id="modalImg" style="max-width:90%; max-height:90%; border-radius:10px;">
+</div>
 </body>
 </html>
