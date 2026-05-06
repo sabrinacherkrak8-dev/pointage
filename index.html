@@ -210,8 +210,8 @@ async function updateTable() {
     let rows = {};
 
     snapshot.forEach(docSnap => {
-        const d = docSnap.data();
-        const key = d.name + "_" + d.date;
+    const d = docSnap.data();
+    d.id = docSnap.id; // 🔥 IMPORTANT
 
         if (!rows[key]) {
             rows[key] = {
@@ -221,7 +221,10 @@ async function updateTable() {
             };
         }
 
-        rows[key][d.type] = d;
+        rows[key][d.type] = {
+    ...d,
+    id: docSnap.id
+};
     });
 
     Object.values(rows).forEach(r => {
