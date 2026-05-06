@@ -271,16 +271,21 @@ window.unlockManager = function() {
         alert("Code incorrect");
     }
 };
-const modal = document.getElementById("imageModal");
-const modalImg = document.getElementById("modalImg");
+let modal;
+let modalImg;
+
+window.addEventListener("DOMContentLoaded", () => {
+    modal = document.getElementById("imageModal");
+    modalImg = document.getElementById("modalImg");
+
+    modal.onclick = function() {
+        modal.style.display = "none";
+    };
+});
 
 window.openImage = function(src) {
     modal.style.display = "flex";
     modalImg.src = src;
-};
-
-modal.onclick = function() {
-    modal.style.display = "none";
 };
 </script>
 <div id="imageModal" style="
