@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Pointage opérateurs</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+}
+
+header {
+    background: #1e293b;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+h3 {
+    font-size: 40px;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+}
+
+select, button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+}
+
+.arrivee {
+    background: #16a34a;
+    color: white;
+}
+
+.depart {
+    background: #dc2626;
+    color: white;
+}
+
+video {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+img {
+    width: 60px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <h2>Pointage opérateurs</h2>
+</header>
+
+<div class="container">
+
+<h3>Opérateur</h3>
+
+<select id="operator">
+<option>Cipriano Ilyes</option>
+<option>Escallon Cedric</option>
+<option>Menayame Helon</option>
+<option>Balde Mamadou</option>
+<option>Lessi Jerome</option>
+<option>Ulman Sonny</option>
+<option>Dif Kamel</option>
+<option>Persico Shainy</option>
+<option>Bourechak Hocine</option>
+<option>Akachat Hakim</option>
+<option>Ladjimi Lenny</option>
+<option>Sesay David</option>
+<option>ABDENNABI Mounji</option>
+<option>FAURE Thomas</option>
+</select>
+
+<button class="arrivee" onclick="startCamera('arrivee')">Arrivée</button>
+<button class="depart" onclick="startCamera('depart')">Départ</button>
+
+<video id="video" autoplay hidden></video>
+<button id="snapBtn" onclick="takePhoto()" hidden>📸 Photo</button>
+<canvas id="canvas" hidden></canvas>
+
+<button onclick="unlockManager()">Accès Manager</button>
+
+<div id="managerView" style="display:none;">
+<h3>Vue manager</h3>
+
+<table>
+<thead>
+<tr>
+<th>Nom / Date</th>
+<th>Arrivée</th>
+<th>Départ</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 🔴 REMPLACE AVEC TON CONFIG FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyBLUb2x7siUdDBC41DYebd9iTtByRQaWPE",
+  authDomain: "badgeuse-airliquide.firebaseapp.com",
+  projectId: "badgeuse-airliquide",
+  storageBucket: "badgeuse-airliquide.firebasestorage.app",
+  messagingSenderId: "201287681665",
+  appId: "1:201287681665:web:c7fc578071625eefdeef80",
+  measurementId: "G-7HFB86DBYX"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let currentType = "";
+let stream;
+
+// 📸 CAMERA
+window.startCamera = function(type) {
+    currentType = type;
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+    .then(s => {
+        stream = s;
+        video.srcObject = stream;
+        video.hidden = false;
+        snapBtn.hidden = false;
+    });
+};
+
+// 📸 PHOTO + FIRESTORE
+window.takePhoto = async function() {
+
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    ctx.drawImage(video, 0, 0);
+
+    const image = canvas.toDataURL("image/jpeg", 0.6);
+
+    const name = operator.value;
+    const now = new Date();
+    const dateStr = now.toISOString().split("T")[0];
+
+    await addDoc(collection(db, "pointages"), {
+        name: name,
+        type: currentType,
+        image: image,
+        time: now.toLocaleString(),
+        date: dateStr,
+        timestamp: Date.now()
+    });
+
+    alert("Pointage enregistré");
+
+    updateTable();
+
+    stream.getTracks().forEach(track => track.stop());
+    video.hidden = true;
+    snapBtn.hidden = true;
+};
+
+// 📊 CHARGER TABLE (30 jours)
+async function updateTable() {
+
+    tableBody.innerHTML = "";
+
+    const limitDate = Date.now() - (30 * 24 * 60 * 60 * 1000);
+
+    const q = query(collection(db, "pointages"), where("timestamp", ">=", limitDate));
+    const snapshot = await getDocs(q);
+
+    let rows = {};
+
+    snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        const key = d.name + "_" + d.date;
+
+        if (!rows[key]) {
+            rows[key] = {
+                name: d.name,
+                date: d.date,
+                id: docSnap.id
+            };
+        }
+
+        rows[key][d.type] = d;
+    });
+
+    Object.values(rows).forEach(r => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${r.name}<br>${r.date}</td>
+            <td>${r.arrivee ? `<img src="${r.arrivee.image}"><br>${r.arrivee.time}` : ""}</td>
+            <td>${r.depart ? `<img src="${r.depart.image}"><br>${r.depart.time}` : ""}</td>
+            <td><button onclick="deleteEntry('${r.id}')">❌</button></td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+// 🗑️ SUPPRIMER
+window.deleteEntry = async function(id) {
+    if (confirm("Supprimer ?")) {
+        await deleteDoc(doc(db, "pointages", id));
+        updateTable();
+    }
+};
+
+// 🔐 MANAGER
+window.unlockManager = function() {
+
+    if (managerView.style.display === "block") {
+        managerView.style.display = "none";
+        return;
+    }
+
+    const code = prompt("Code manager ?");
+
+    if (code === "1731") {
+        managerView.style.display = "block";
+        updateTable();
+    } else {
+        alert("Code incorrect");
+    }
+};
+
+</script>
+
+</body>
+</html>
