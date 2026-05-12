@@ -2,73 +2,99 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pointage opérateurs</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    margin: 0;
+
+body{
+    font-family:Arial, sans-serif;
+    margin:0;
+    background:#f4f6f8;
 }
 
-header {
-    background: #1e293b;
-    color: white;
-    padding: 15px;
-    text-align: center;
+header{
+    background:#1e293b;
+    color:white;
+    padding:15px;
+    text-align:center;
 }
 
-h3 {
-    font-size: 40px;
-    text-align: center;
+.container{
+    padding:20px;
 }
 
-.container {
-    padding: 20px;
+h3{
+    text-align:center;
+    font-size:32px;
 }
 
-select, button {
-    width: 100%;
-    margin: 10px 0;
-    padding: 15px;
-    font-size: 18px;
-    border-radius: 8px;
-    border: none;
+select,
+button{
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
 }
 
-.arrivee {
-    background: #16a34a;
-    color: white;
+.arrivee{
+    background:#16a34a;
+    color:white;
 }
 
-.depart {
-    background: #dc2626;
-    color: white;
+.depart{
+    background:#dc2626;
+    color:white;
 }
 
-video {
-    width: 100%;
-    max-width: 300px;
-    border-radius: 10px;
+video{
+    width:100%;
+    max-width:350px;
+    border-radius:10px;
+    display:block;
+    margin:auto;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    margin-top:20px;
 }
 
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
 }
 
-img {
-    width: 60px;
+img{
+    width:70px;
+    border-radius:6px;
 }
+
+#imageModal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+#imageModal img{
+    width:90%;
+    max-height:90%;
+    object-fit:contain;
+}
+
 </style>
-
 </head>
 
 <body>
@@ -79,263 +105,412 @@ img {
 
 <div class="container">
 
-<h3>Opérateur</h3>
+    <h3>Opérateur</h3>
 
-<select id="operator">
-<option>Cipriano Ilyes</option>
-<option>Escallon Cedric</option>
-<option>Menayame Helon</option>
-<option>Balde Mamadou</option>
-<option>Lessi Jerome</option>
-<option>Ulman Sonny</option>
-<option>Dif Kamel</option>
-<option>Persico Shainy</option>
-<option>Bourechak Hocine</option>
-<option>Akachat Hakim</option>
-<option>Ladjimi Lenny</option>
-<option>Sesay David</option>
-<option>ABDENNABI Mounji</option>
-<option>FAURE Thomas</option>
-</select>
+    <select id="operator">
+        <option>Cipriano Ilyes</option>
+        <option>Escallon Cedric</option>
+        <option>Menayame Helon</option>
+        <option>Balde Mamadou</option>
+        <option>Lessi Jerome</option>
+        <option>Ulman Sonny</option>
+        <option>Dif Kamel</option>
+        <option>Persico Shainy</option>
+        <option>Bourechak Hocine</option>
+        <option>Akachat Hakim</option>
+        <option>Ladjimi Lenny</option>
+        <option>Sesay David</option>
+        <option>ABDENNABI Mounji</option>
+        <option>FAURE Thomas</option>
+    </select>
 
-<button class="arrivee" onclick="startCamera('arrivee')">Arrivée</button>
-<button class="depart" onclick="startCamera('depart')">Départ</button>
+    <button class="arrivee" onclick="startCamera('arrivee')">
+        Arrivée
+    </button>
 
-<video id="video" autoplay hidden></video>
-<button id="snapBtn" onclick="takePhoto()" hidden>📸 Photo</button>
-<canvas id="canvas" hidden></canvas>
+    <button class="depart" onclick="startCamera('depart')">
+        Départ
+    </button>
 
-<button onclick="unlockManager()">Accès Manager</button>
+    <video id="video" autoplay playsinline hidden></video>
 
-<div id="managerView" style="display:none;">
-<h3>Vue manager</h3>
+    <button id="snapBtn" hidden onclick="takePhoto()">
+        📸 Prendre la photo
+    </button>
 
-<table>
-<thead>
-<tr>
-<th>Nom / Date</th>
-<th>Arrivée</th>
-<th>Départ</th>
-<th>Durée</th>
-<th>Action</th>
-</tr>
-</thead>
+    <canvas id="canvas" hidden></canvas>
 
-<tbody id="tableBody"></tbody>
-</table>
+    <button onclick="unlockManager()">
+        Accès Manager
+    </button>
+
+    <div id="managerView" style="display:none;">
+
+        <h3>Vue manager</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom / Date</th>
+                    <th>Arrivée</th>
+                    <th>Départ</th>
+                    <th>Durée</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody"></tbody>
+        </table>
+
+    </div>
+
 </div>
 
+<div id="imageModal">
+    <img id="modalImg">
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔴 REMPLACE AVEC TON CONFIG FIREBASE
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    query,
+    where
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+// FIREBASE CONFIG
 const firebaseConfig = {
-  apiKey: "AIzaSyBLUb2x7siUdDBC41DYebd9iTtByRQaWPE",
-  authDomain: "badgeuse-airliquide.firebaseapp.com",
-  projectId: "badgeuse-airliquide",
-  storageBucket: "badgeuse-airliquide.firebasestorage.app",
-  messagingSenderId: "201287681665",
-  appId: "1:201287681665:web:c7fc578071625eefdeef80",
-  measurementId: "G-7HFB86DBYX"
+
+    apiKey: "AIzaSyBLUb2x7siUdDBC41DYebd9iTtByRQaWPE",
+
+    authDomain: "badgeuse-airliquide.firebaseapp.com",
+
+    projectId: "badgeuse-airliquide",
+
+    storageBucket: "badgeuse-airliquide.firebasestorage.app",
+
+    messagingSenderId: "201287681665",
+
+    appId: "1:201287681665:web:c7fc578071625eefdeef80"
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
 
-let currentType = "";
-let stream;
 
-// 📸 CAMERA
-window.startCamera = function(type) {
+// ELEMENTS
+const operator = document.getElementById("operator");
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const snapBtn = document.getElementById("snapBtn");
+const tableBody = document.getElementById("tableBody");
+const managerView = document.getElementById("managerView");
+
+const modal = document.getElementById("imageModal");
+const modalImg = document.getElementById("modalImg");
+
+
+let currentType = "";
+let stream = null;
+
+
+// CAMERA
+window.startCamera = async function(type){
+
     currentType = type;
 
-    navigator.mediaDevices.getUserMedia({ video: true })
-    .then(s => {
-        stream = s;
+    try{
+
+        stream = await navigator.mediaDevices.getUserMedia({
+            video:true
+        });
+
         video.srcObject = stream;
+
         video.hidden = false;
+
         snapBtn.hidden = false;
-    });
+
+    }catch(err){
+
+        alert("Impossible d'accéder à la caméra");
+
+        console.error(err);
+    }
 };
 
-// 📸 PHOTO + FIRESTORE
-window.takePhoto = async function() {
+
+// PHOTO + FIRESTORE
+window.takePhoto = async function(){
 
     const ctx = canvas.getContext("2d");
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
-    ctx.drawImage(video, 0, 0);
+    ctx.drawImage(video,0,0);
 
-    const image = canvas.toDataURL("image/jpeg", 1.0);
+    const image = canvas.toDataURL("image/jpeg",0.8);
 
-    const name = operator.value;
     const now = new Date();
+
     const dateStr = now.toISOString().split("T")[0];
 
-    await addDoc(collection(db, "pointages"), {
-        name: name,
-        type: currentType,
-        image: image,
-        time: now.toLocaleString(),
-        date: dateStr,
-        timestamp: Date.now()
-    });
+    try{
 
-    alert("Pointage enregistré");
+        await addDoc(collection(db,"pointages"),{
 
-    updateTable();
+            name: operator.value,
 
-    stream.getTracks().forEach(track => track.stop());
-    video.hidden = true;
-    snapBtn.hidden = true;
+            type: currentType,
+
+            image: image,
+
+            time: now.toLocaleTimeString(),
+
+            date: dateStr,
+
+            timestamp: Date.now()
+        });
+
+        alert("Pointage enregistré");
+
+        stopCamera();
+
+        updateTable();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert("Erreur enregistrement");
+    }
 };
 
-// 📊 CHARGER TABLE (30 jours)
-async function updateTable() {
+
+// STOP CAMERA
+function stopCamera(){
+
+    if(stream){
+
+        stream.getTracks().forEach(track => track.stop());
+    }
+
+    video.hidden = true;
+
+    snapBtn.hidden = true;
+}
+
+
+// TABLE
+async function updateTable(){
 
     tableBody.innerHTML = "";
 
     const limitDate = Date.now() - (30 * 24 * 60 * 60 * 1000);
 
-    const q = query(collection(db, "pointages"), where("timestamp", ">=", limitDate));
+    const q = query(
+        collection(db,"pointages"),
+        where("timestamp",">=",limitDate)
+    );
+
     const snapshot = await getDocs(q);
 
     let rows = {};
 
     snapshot.forEach(docSnap => {
-    const d = docSnap.data();
-    d.id = docSnap.id; // 🔥 IMPORTANT
 
-        if (!rows[key]) {
+        const d = docSnap.data();
+
+        const key = d.name + "_" + d.date;
+
+        if(!rows[key]){
+
             rows[key] = {
-                name: d.name,
-                date: d.date,
-                id: docSnap.id
+
+                name:d.name,
+
+                date:d.date
             };
         }
 
         rows[key][d.type] = {
-    ...d,
-    id: docSnap.id
-};
+
+            ...d,
+
+            id:docSnap.id
+        };
     });
+
 
     Object.values(rows).forEach(r => {
 
-        const row = document.createElement("tr");
+        const tr = document.createElement("tr");
 
-        row.innerHTML = `
-    <td>${r.name}<br>${r.date}</td>
-    <td>
-        ${r.arrivee 
-            ? `<img src="${r.arrivee.image}" onclick="openImage('${r.arrivee.image}')" style="cursor:pointer;"><br>${r.arrivee.time}` 
-            : "" }
-    </td>
-    <td>
-        ${r.depart 
-            ? `<img src="${r.depart.image}" onclick="openImage('${r.depart.image}')" style="cursor:pointer;"><br>${r.depart.time}` 
-            : "❌ Non pointé" }
-    </td>
-    <td>${calculerDuree(r.arrivee, r.depart)}</td>
-    <td>
-<button onclick="deleteEntry('${r.arrivee?.id}', '${r.depart?.id}')">❌</button>
-</td>
-`;
+        tr.innerHTML = `
 
-        tableBody.appendChild(row);
+        <td>
+            ${r.name}<br>
+            ${r.date}
+        </td>
+
+        <td>
+
+            ${
+                r.arrivee ?
+
+                `<img src="${r.arrivee.image}"
+                onclick="openImage('${r.arrivee.image}')">
+
+                <br>
+
+                ${r.arrivee.time}`
+
+                :
+
+                "❌"
+            }
+
+        </td>
+
+        <td>
+
+            ${
+                r.depart ?
+
+                `<img src="${r.depart.image}"
+                onclick="openImage('${r.depart.image}')">
+
+                <br>
+
+                ${r.depart.time}`
+
+                :
+
+                "❌ Non pointé"
+            }
+
+        </td>
+
+        <td>
+            ${calculerDuree(r.arrivee,r.depart)}
+        </td>
+
+        <td>
+
+            <button onclick="deleteEntry(
+                '${r.arrivee?.id || ""}',
+                '${r.depart?.id || ""}'
+            )">
+
+            ❌
+
+            </button>
+
+        </td>
+        `;
+
+        tableBody.appendChild(tr);
     });
 }
 
-// 🗑️ SUPPRIMER
-window.deleteEntry = async function(arriveeId, departId) {
 
-    if (confirm("Supprimer toute la ligne ?")) {
+// DUREE
+function calculerDuree(arrivee,depart){
 
-        // supprimer arrivée
-        if (arriveeId) {
-            await deleteDoc(doc(db, "pointages", arriveeId));
-        }
+    if(!arrivee || !depart){
 
-        // supprimer départ
-        if (departId) {
-            await deleteDoc(doc(db, "pointages", departId));
-        }
-
-        updateTable();
+        return "⏳ En cours";
     }
-};
-
-// 🔐 MANAGER
-window.unlockManager = function() {
-
-    if (managerView.style.display === "block") {
-        managerView.style.display = "none";
-        return;
-    }
-
-    const code = prompt("Code manager ?");
-
-    if (code === "1731") {
-        managerView.style.display = "block";
-        updateTable();
-    } else {
-        alert("Code incorrect");
-    }
-};
-let modal;
-let modalImg;
-
-window.addEventListener("DOMContentLoaded", () => {
-    modal = document.getElementById("imageModal");
-    modalImg = document.getElementById("modalImg");
-
-    modal.onclick = function() {
-        modal.style.display = "none";
-    };
-});
-
-window.openImage = function(src) {
-    modal.style.display = "flex";
-    modalImg.src = src;
-};
-function calculerDuree(arrivee, depart) {
-
-    if (!arrivee || !depart) return "⏳ En cours";
 
     const diff = depart.timestamp - arrivee.timestamp;
 
-    const heures = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const heures = Math.floor(diff / (1000*60*60));
+
+    const minutes = Math.floor(
+        (diff % (1000*60*60)) / (1000*60)
+    );
 
     return `${heures}h ${minutes}min`;
+}
+
+
+// DELETE
+window.deleteEntry = async function(arriveeId,departId){
+
+    if(!confirm("Supprimer cette ligne ?")) return;
+
+    try{
+
+        if(arriveeId){
+
+            await deleteDoc(doc(db,"pointages",arriveeId));
+        }
+
+        if(departId){
+
+            await deleteDoc(doc(db,"pointages",departId));
+        }
+
+        updateTable();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert("Erreur suppression");
+    }
 };
+
+
+// MANAGER
+window.unlockManager = function(){
+
+    if(managerView.style.display === "block"){
+
+        managerView.style.display = "none";
+
+        return;
+    }
+
+    const code = prompt("Code manager");
+
+    if(code === "1731"){
+
+        managerView.style.display = "block";
+
+        updateTable();
+
+    }else{
+
+        alert("Code incorrect");
+    }
+};
+
+
+// IMAGE MODAL
+window.openImage = function(src){
+
+    modal.style.display = "flex";
+
+    modalImg.src = src;
+};
+
+modal.onclick = function(){
+
+    modal.style.display = "none";
+};
+
 </script>
-<div id="imageModal" style="
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.8);
-    justify-content:center;
-    align-items:center;
-">
 
-    <img id="modalImg" style="
-        width:90%;
-        max-height:90%;
-        object-fit:contain;
-        border-radius:10px;
-    ">
-
-</div>
 </body>
 </html>
