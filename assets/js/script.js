@@ -13,7 +13,7 @@ import {
 // FIREBASE CONFIG
 const firebaseConfig = {
 
-    apiKey: "VOTRE_API_KEY",
+    apiKey: "AIzaSyBLUb2x7siUdDBC41DYebd9iTtByRQaWPE",
 
     authDomain: "badgeuse-airliquide.firebaseapp.com",
 
