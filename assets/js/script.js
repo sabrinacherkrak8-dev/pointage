@@ -91,6 +91,61 @@ window.takePhoto = async function(){
 
     try{
 
+        // RECUPERATION DES POINTAGES
+        const snapshot = await getDocs(collection(db,"pointages"));
+
+        let pointages = [];
+
+        snapshot.forEach(docSnap => {
+
+            const data = docSnap.data();
+
+            // seulement cet opérateur
+            if(data.name === operator.value){
+
+                pointages.push(data);
+            }
+        });
+
+        // TRI PAR DATE
+        pointages.sort((a,b)=>b.timestamp-a.timestamp);
+
+        // DERNIER POINTAGE
+        const lastPointage = pointages[0];
+
+        // REGLES METIER
+
+        // Double arrivée interdite
+        if(
+            currentType === "arrivee" &&
+            lastPointage &&
+            lastPointage.type === "arrivee"
+        ){
+
+            alert("Cet opérateur est déjà en arrivée.");
+
+            stopCamera();
+
+            return;
+        }
+
+        // Double départ interdit
+        if(
+            currentType === "depart" &&
+            (
+                !lastPointage ||
+                lastPointage.type === "depart"
+            )
+        ){
+
+            alert("Impossible de faire un départ sans arrivée.");
+
+            stopCamera();
+
+            return;
+        }
+
+        // ENREGISTREMENT
         await addDoc(collection(db,"pointages"),{
 
             name: operator.value,
