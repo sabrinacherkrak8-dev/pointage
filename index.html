@@ -312,47 +312,58 @@ function stopCamera(){
 
 
 // TABLE
-async function updateTable(){
+async function updateTable() {
 
     tableBody.innerHTML = "";
 
-    const limitDate = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const snapshot = await getDocs(collection(db, "pointages"));
 
-    const q = query(
-        collection(db,"pointages"),
-        where("timestamp",">=",limitDate)
-    );
-
-    const snapshot = await getDocs(q);
-
-    let rows = {};
+    let pointages = [];
 
     snapshot.forEach(docSnap => {
 
-        const d = docSnap.data();
-
-        const key = d.name + "_" + d.date;
-
-        if(!rows[key]){
-
-            rows[key] = {
-
-                name:d.name,
-
-                date:d.date
-            };
-        }
-
-        rows[key][d.type] = {
-
-            ...d,
-
-            id:docSnap.id
-        };
+        pointages.push({
+            id: docSnap.id,
+            ...docSnap.data()
+        });
     });
 
+    // TRI PAR DATE
+    pointages.sort((a, b) => a.timestamp - b.timestamp);
 
-    Object.values(rows).forEach(r => {
+    let lignes = [];
+
+    // CREATION DES LIGNES
+    pointages.forEach(p => {
+
+        if (p.type === "arrivee") {
+
+            // chaque arrivée crée une nouvelle ligne
+            lignes.push({
+                name: p.name,
+                date: p.date,
+                arrivee: p,
+                depart: null
+            });
+
+        } else if (p.type === "depart") {
+
+            // cherche la dernière ligne incomplète
+            let ligne = [...lignes]
+                .reverse()
+                .find(l =>
+                    l.name === p.name &&
+                    l.depart === null
+                );
+
+            if (ligne) {
+                ligne.depart = p;
+            }
+        }
+    });
+
+    // AFFICHAGE
+    lignes.reverse().forEach(r => {
 
         const tr = document.createElement("tr");
 
@@ -377,7 +388,7 @@ async function updateTable(){
 
                 :
 
-                "❌"
+                ""
             }
 
         </td>
@@ -396,13 +407,13 @@ async function updateTable(){
 
                 :
 
-                "❌ Non pointé"
+                "⏳ En cours"
             }
 
         </td>
 
         <td>
-            ${calculerDuree(r.arrivee,r.depart)}
+            ${calculerDuree(r.arrivee, r.depart)}
         </td>
 
         <td>
