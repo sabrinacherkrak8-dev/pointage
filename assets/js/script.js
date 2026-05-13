@@ -42,6 +42,80 @@ const managerView = document.getElementById("managerView");
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImg");
 
+// MANAGER DEJA CONNECTE
+const managerLogged =
+    sessionStorage.getItem("manager") === "true";
+
+if(managerLogged){
+
+    console.log("Manager connecté");
+
+}else{
+
+// DETECTION MOBILE
+const isMobile = /Android|iPhone|iPad|iPod/i.test(
+    navigator.userAgent
+);
+
+// SI TELEPHONE
+if(isMobile){
+
+    // CACHE TOUT
+    document.body.innerHTML = `
+        <div style="
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-direction:column;
+            font-family:Arial;
+            padding:20px;
+            text-align:center;
+        ">
+
+            <h2>
+                Accès badgeuse interdit
+            </h2>
+
+            <button id="managerAccessBtn"
+            style="
+                padding:15px 25px;
+                border:none;
+                border-radius:8px;
+                background:#1e293b;
+                color:white;
+                font-size:18px;
+                margin-top:20px;
+            ">
+                Accès manager
+            </button>
+
+        </div>
+    `;
+
+    // BOUTON MANAGER
+    document
+    .getElementById("managerAccessBtn")
+    .addEventListener("click",()=>{
+
+        const code = prompt("Code manager");
+
+        if(code === "1731"){
+
+            sessionStorage.setItem("manager","true");
+
+            // recharge le vrai site
+            location.reload();
+
+        }else{
+
+            alert("Code incorrect");
+        }
+    });
+    
+    throw new Error("Accès mobile bloqué");
+}
+
 
 let currentType = "";
 let stream = null;
