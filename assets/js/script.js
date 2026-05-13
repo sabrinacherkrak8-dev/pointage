@@ -46,11 +46,6 @@ const modalImg = document.getElementById("modalImg");
 const managerLogged =
     sessionStorage.getItem("manager") === "true";
 
-if(managerLogged){
-
-    console.log("Manager connecté");
-
-}else{
 
 // DETECTION TABLETTE ANDROID
 const isAndroid =
@@ -62,8 +57,9 @@ const isTablet =
 const isAuthorizedDevice =
     isAndroid && isTablet;
 
-// SI APPAREIL NON AUTORISE
-if(!isAuthorizedDevice){
+
+// SI PAS TABLETTE ET PAS MANAGER
+if(!isAuthorizedDevice && !managerLogged){
 
     // CACHE TOUT
     document.body.innerHTML = `
@@ -109,7 +105,6 @@ if(!isAuthorizedDevice){
 
             sessionStorage.setItem("manager","true");
 
-            // recharge le vrai site
             location.reload();
 
         }else{
@@ -117,8 +112,8 @@ if(!isAuthorizedDevice){
             alert("Code incorrect");
         }
     });
-    
-    throw new Error("Accès mobile bloqué");
+
+    throw new Error("Accès bloqué");
 }
 
 
@@ -472,4 +467,4 @@ modal.onclick = function(){
 
     modal.style.display = "none";
 };
-}
+
