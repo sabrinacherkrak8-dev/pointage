@@ -80,7 +80,8 @@ window.startCamera = async function(type){
 
 // PHOTO + FIRESTORE
 window.takePhoto = async function(){
-        // EVITE LES DOUBLE CLICS
+
+    // BLOQUE LES DOUBLE CLICS
     if(isSaving) return;
 
     isSaving = true;
@@ -89,20 +90,20 @@ window.takePhoto = async function(){
 
     snapBtn.innerText = "Enregistrement...";
 
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    ctx.drawImage(video,0,0);
-
-    const image = canvas.toDataURL("image/jpeg",0.8);
-
-    const now = new Date();
-
-    const dateStr = now.toISOString().split("T")[0];
-
     try{
+
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        ctx.drawImage(video,0,0);
+
+        const image = canvas.toDataURL("image/jpeg",0.8);
+
+        const now = new Date();
+
+        const dateStr = now.toISOString().split("T")[0];
 
         // RECUPERATION DES POINTAGES
         const snapshot = await getDocs(collection(db,"pointages"));
@@ -113,22 +114,19 @@ window.takePhoto = async function(){
 
             const data = docSnap.data();
 
-            // seulement cet opérateur
             if(data.name === operator.value){
 
                 pointages.push(data);
             }
         });
 
-        // TRI PAR DATE
+        // TRI
         pointages.sort((a,b)=>b.timestamp-a.timestamp);
 
         // DERNIER POINTAGE
         const lastPointage = pointages[0];
 
-        // REGLES METIER
-
-        // Double arrivée interdite
+        // DOUBLE ARRIVEE INTERDITE
         if(
             currentType === "arrivee" &&
             lastPointage &&
@@ -142,7 +140,7 @@ window.takePhoto = async function(){
             return;
         }
 
-        // Double départ interdit
+        // DEPART SANS ARRIVEE INTERDIT
         if(
             currentType === "depart" &&
             (
@@ -157,6 +155,9 @@ window.takePhoto = async function(){
 
             return;
         }
+
+        // FERME LA CAMERA IMMEDIATEMENT
+        stopCamera();
 
         // ENREGISTREMENT
         await addDoc(collection(db,"pointages"),{
@@ -176,11 +177,9 @@ window.takePhoto = async function(){
 
         alert("Pointage enregistré");
 
-        stopCamera();
-
         updateTable();
 
-        }catch(err){
+    }catch(err){
 
         console.error(err);
 
