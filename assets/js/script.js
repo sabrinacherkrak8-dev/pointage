@@ -45,6 +45,7 @@ const modalImg = document.getElementById("modalImg");
 
 let currentType = "";
 let stream = null;
+let isSaving = false;
 
 
 // CAMERA
@@ -79,6 +80,14 @@ window.startCamera = async function(type){
 
 // PHOTO + FIRESTORE
 window.takePhoto = async function(){
+        // EVITE LES DOUBLE CLICS
+    if(isSaving) return;
+
+    isSaving = true;
+
+    snapBtn.disabled = true;
+
+    snapBtn.innerText = "Enregistrement...";
 
     const ctx = canvas.getContext("2d");
 
@@ -171,11 +180,19 @@ window.takePhoto = async function(){
 
         updateTable();
 
-    }catch(err){
+        }catch(err){
 
         console.error(err);
 
         alert("Erreur enregistrement");
+
+    }finally{
+
+        isSaving = false;
+
+        snapBtn.disabled = false;
+
+        snapBtn.innerText = "📸 Prendre la photo";
     }
 };
 
