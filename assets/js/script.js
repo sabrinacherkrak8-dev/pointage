@@ -52,13 +52,18 @@ if(managerLogged){
 
 }else{
 
-// DETECTION MOBILE
-const isMobile = /Android|iPhone|iPad|iPod/i.test(
-    navigator.userAgent
-);
+// DETECTION TABLETTE ANDROID
+const isAndroid =
+    /Android/i.test(navigator.userAgent);
 
-// SI TELEPHONE
-if(isMobile){
+const isTablet =
+    window.innerWidth >= 800;
+
+const isAuthorizedDevice =
+    isAndroid && isTablet;
+
+// SI APPAREIL NON AUTORISE
+if(!isAuthorizedDevice){
 
     // CACHE TOUT
     document.body.innerHTML = `
@@ -467,3 +472,4 @@ modal.onclick = function(){
 
     modal.style.display = "none";
 };
+}
