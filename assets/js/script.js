@@ -430,10 +430,10 @@ window.deleteEntry = async function(arriveeId,departId){
     }
 };
 
-window.deleteAllEntries = async function () {
+window.deleteOldEntries = async function () {
 
     const texte = prompt(
-        'Tapez "SUPPRIMER" pour effacer tout l\'historique.'
+        'Tapez "SUPPRIMER" pour effacer les pointages de plus de 7 jours.'
     );
 
     if (texte !== "SUPPRIMER") {
@@ -445,13 +445,26 @@ window.deleteAllEntries = async function () {
 
         const snapshot = await getDocs(collection(db, "pointages"));
 
-        const promises = snapshot.docs.map(docSnap =>
-            deleteDoc(doc(db, "pointages", docSnap.id))
-        );
+        // Date limite : il y a 7 jours
+        const limite = Date.now() - (7 * 24 * 60 * 60 * 1000);
+
+        const promises = [];
+
+        snapshot.forEach((docSnap) => {
+
+            const data = docSnap.data();
+
+            if (data.timestamp <= limite) {
+                promises.push(
+                    deleteDoc(doc(db, "pointages", docSnap.id))
+                );
+            }
+
+        });
 
         await Promise.all(promises);
 
-        alert("Tout l'historique a été supprimé.");
+        alert("Les pointages de plus de 7 jours ont été supprimés.");
 
         updateTable();
 
