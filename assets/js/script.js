@@ -431,7 +431,9 @@ window.deleteEntry = async function(arriveeId,departId){
 };
 
 window.deleteOldEntries = async function () {
-
+    
+     console.log("Fonction appelée");
+    
     const texte = prompt(
         'Tapez "SUPPRIMER" pour effacer les pointages de plus de 7 jours.'
     );
