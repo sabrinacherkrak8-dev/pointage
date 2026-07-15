@@ -430,7 +430,7 @@ window.deleteEntry = async function(arriveeId,departId){
 };
 
 window.deleteOldEntries = async function () {
-    
+
     const texte = prompt(
         'Tapez "SUPPRIMER" pour effacer les pointages de plus de 7 jours.'
     );
@@ -444,8 +444,12 @@ window.deleteOldEntries = async function () {
 
         const snapshot = await getDocs(collection(db, "pointages"));
 
-        // Date limite : il y a 7 jours
-        const limite = Date.now() - (7 * 24 * 60 * 60 * 1000);
+        const limite = new Date();
+        limite.setDate(limite.getDate() - 7);
+
+        const limiteString = limite.toISOString().split("T")[0];
+
+        console.log("Suppression avant :", limiteString);
 
         const promises = [];
 
@@ -453,10 +457,18 @@ window.deleteOldEntries = async function () {
 
             const data = docSnap.data();
 
-            if (data.timestamp <= limite) {
+            console.log(
+                data.name,
+                data.date,
+                data.date < limiteString
+            );
+
+            if (data.date < limiteString) {
+
                 promises.push(
                     deleteDoc(doc(db, "pointages", docSnap.id))
                 );
+
             }
 
         });
