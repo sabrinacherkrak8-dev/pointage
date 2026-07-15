@@ -463,6 +463,10 @@ window.deleteAllEntries = async function () {
     }
 };
 
+document
+    .getElementById("deleteAllBtn")
+    .addEventListener("click", window.deleteAllEntries);
+
 
 // MANAGER
 window.unlockManager = function(){
