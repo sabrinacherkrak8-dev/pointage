@@ -517,4 +517,4 @@ modal.onclick = function(){
 
 document
     .getElementById("deleteAllBtn")
-    .addEventListener("click", window.deleteAllEntries);
+    .addEventListener("click", window.deleteOldEntries);
