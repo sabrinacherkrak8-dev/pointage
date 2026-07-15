@@ -38,6 +38,7 @@ const canvas = document.getElementById("canvas");
 const snapBtn = document.getElementById("snapBtn");
 const tableBody = document.getElementById("tableBody");
 const managerView = document.getElementById("managerView");
+const deleteAllBtn = document.getElementById("deleteAllBtn");
 
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImg");
@@ -426,6 +427,39 @@ window.deleteEntry = async function(arriveeId,departId){
         console.error(err);
 
         alert("Erreur suppression");
+    }
+};
+
+window.deleteAllEntries = async function () {
+
+    const texte = prompt(
+        'Tapez "SUPPRIMER" pour effacer tout l\'historique.'
+    );
+
+    if (texte !== "SUPPRIMER") {
+        alert("Suppression annulée.");
+        return;
+    }
+
+    try {
+
+        const snapshot = await getDocs(collection(db, "pointages"));
+
+        const promises = snapshot.docs.map(docSnap =>
+            deleteDoc(doc(db, "pointages", docSnap.id))
+        );
+
+        await Promise.all(promises);
+
+        alert("Tout l'historique a été supprimé.");
+
+        updateTable();
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("Erreur lors de la suppression.");
     }
 };
 
