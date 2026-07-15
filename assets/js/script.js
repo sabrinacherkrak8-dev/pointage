@@ -39,6 +39,7 @@ const snapBtn = document.getElementById("snapBtn");
 const tableBody = document.getElementById("tableBody");
 const managerView = document.getElementById("managerView");
 const deleteAllBtn = document.getElementById("deleteAllBtn");
+const limite = Date.now() - (7 * 24 * 60 * 60 * 1000);
 
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImg");
@@ -58,6 +59,25 @@ const isTablet =
 const isAuthorizedDevice =
     isAndroid && isTablet;
 
+console.log("Date actuelle :", new Date());
+console.log("Date limite :", new Date(limite));
+
+snapshot.forEach((docSnap) => {
+
+    const data = docSnap.data();
+
+    console.log(
+        data.name,
+        new Date(data.timestamp),
+        data.timestamp <= limite
+    );
+
+    if (data.timestamp <= limite) {
+        promises.push(
+            deleteDoc(doc(db, "pointages", docSnap.id))
+        );
+    }
+});
 
 // SI PAS TABLETTE ET PAS MANAGER
 if(!isAuthorizedDevice && !managerLogged){
