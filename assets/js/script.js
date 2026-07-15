@@ -39,7 +39,6 @@ const snapBtn = document.getElementById("snapBtn");
 const tableBody = document.getElementById("tableBody");
 const managerView = document.getElementById("managerView");
 const deleteAllBtn = document.getElementById("deleteAllBtn");
-const limite = Date.now() - (7 * 24 * 60 * 60 * 1000);
 
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImg");
