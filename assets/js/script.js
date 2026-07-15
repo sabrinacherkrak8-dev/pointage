@@ -502,3 +502,6 @@ modal.onclick = function(){
     modal.style.display = "none";
 };
 
+document
+    .getElementById("deleteAllBtn")
+    .addEventListener("click", window.deleteAllEntries);
