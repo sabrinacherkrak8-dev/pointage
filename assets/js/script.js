@@ -42,7 +42,6 @@ const tableBody = document.getElementById("tableBody");
 const managerView = document.getElementById("managerView");
 const deleteAllBtn = document.getElementById("deleteAllBtn");
 
-const filterOperator = document.getElementById("filterOperator");
 
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImg");
@@ -555,4 +554,3 @@ document
     .getElementById("deleteAllBtn")
     .addEventListener("click", window.deleteOldEntries);
 
-filterOperator.addEventListener("change", updateTable);
