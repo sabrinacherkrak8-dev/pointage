@@ -44,8 +44,6 @@ const deleteAllBtn = document.getElementById("deleteAllBtn");
 
 const filterOperator = document.getElementById("filterOperator");
 
-const searchInput = document.getElementById("searchInput");
-
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImg");
 
@@ -558,5 +556,3 @@ document
     .addEventListener("click", window.deleteOldEntries);
 
 filterOperator.addEventListener("change", updateTable);
-
-searchInput.addEventListener("input", updateTable);
