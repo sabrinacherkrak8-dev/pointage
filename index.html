@@ -15,11 +15,9 @@
     <h2>Pointage opérateurs</h2>
 </header>
 
-<div class="container">
-
-    <h3>Opérateur</h3>
-
-    <select id="operator">
+<div class="filter">
+    <select id="filterOperator">
+        <option value="">Tous les opérateurs</option>
         <option>Cipriano Ilyes</option>
         <option>Escallon Cedric</option>
         <option>Menayame Helon</option>
@@ -38,6 +36,7 @@
         <option>Belkadi Nassime</option>
         <option>Boutouil Fouad</option>
     </select>
+</div>
 
     <button class="arrivee" onclick="startCamera('arrivee')">
         Arrivée
@@ -65,13 +64,8 @@
         
         <button id="deleteAllBtn" class="danger">
     🗑️ Supprimer les pointages de plus de 7 jours
-</button>
-        <div class="filter">
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="Rechercher un opérateur ou une date..."
-    >
+    </button>
+        
 </div>
         <table>
             <thead>
