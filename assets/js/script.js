@@ -295,24 +295,24 @@ async function updateTable() {
 
     tableBody.innerHTML = "";
 
-    const filtre = searchInput.value.trim();
+const filtre = filterOperator.value;
 
-    let snapshot;
+let snapshot;
 
-    if (filtre === "") {
+if (filtre === "") {
 
-        snapshot = await getDocs(collection(db, "pointages"));
+    snapshot = await getDocs(collection(db, "pointages"));
 
-    } else {
+} else {
 
-        const q = query(
-            collection(db, "pointages"),
-            where("name", "==", filtre)
-        );
+    const q = query(
+        collection(db, "pointages"),
+        where("name", "==", filtre)
+    );
 
-        snapshot = await getDocs(q);
+    snapshot = await getDocs(q);
 
-    }
+}
 
     let pointages = [];
 
@@ -556,5 +556,7 @@ modal.onclick = function(){
 document
     .getElementById("deleteAllBtn")
     .addEventListener("click", window.deleteOldEntries);
+
+filterOperator.addEventListener("change", updateTable);
 
 searchInput.addEventListener("input", updateTable);
