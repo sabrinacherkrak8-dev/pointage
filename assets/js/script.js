@@ -42,6 +42,8 @@ const tableBody = document.getElementById("tableBody");
 const managerView = document.getElementById("managerView");
 const deleteAllBtn = document.getElementById("deleteAllBtn");
 
+const filterOperator = document.getElementById("filterOperator");
+
 const searchInput = document.getElementById("searchInput");
 
 const modal = document.getElementById("imageModal");
