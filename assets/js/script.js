@@ -42,6 +42,8 @@ const tableBody = document.getElementById("tableBody");
 const managerView = document.getElementById("managerView");
 const deleteAllBtn = document.getElementById("deleteAllBtn");
 
+const filterOperator = document.getElementById("filterOperator");
+
 
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImg");
@@ -292,9 +294,28 @@ async function updateTable() {
 
     tableBody.innerHTML = "";
 
-const snapshot = await getDocs(
-    collection(db, "pointages")
-);
+let snapshot;
+
+const filtre = filterOperator.value;
+
+
+if(filtre === ""){
+
+    snapshot = await getDocs(
+        collection(db,"pointages")
+    );
+
+}
+else{
+
+    const q = query(
+        collection(db,"pointages"),
+        where("name","==",filtre)
+    );
+
+    snapshot = await getDocs(q);
+
+}
 
     let pointages = [];
 
@@ -538,4 +559,9 @@ modal.onclick = function(){
 document
     .getElementById("deleteAllBtn")
     .addEventListener("click", window.deleteOldEntries);
+
+filterOperator.addEventListener(
+    "change",
+    updateTable
+);
 
