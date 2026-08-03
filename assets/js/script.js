@@ -40,6 +40,8 @@ const tableBody = document.getElementById("tableBody");
 const managerView = document.getElementById("managerView");
 const deleteAllBtn = document.getElementById("deleteAllBtn");
 
+const searchInput = document.getElementById("searchInput");
+
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImg");
 
@@ -330,8 +332,17 @@ async function updateTable() {
             }
         }
     });
+    const filtre = searchInput.value.trim().toLowerCase();
 
-    lignes.reverse().forEach(r => {
+const lignesFiltrees = lignes.filter(r => {
+
+    return (
+        r.name.toLowerCase().includes(filtre) ||
+        r.date.includes(filtre)
+    );
+
+});
+    lignesFiltrees.reverse().forEach(r => {
 
         const tr = document.createElement("tr");
 
@@ -529,3 +540,5 @@ modal.onclick = function(){
 document
     .getElementById("deleteAllBtn")
     .addEventListener("click", window.deleteOldEntries);
+
+searchInput.addEventListener("input", updateTable);
