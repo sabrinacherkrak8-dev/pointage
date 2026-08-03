@@ -293,7 +293,24 @@ async function updateTable() {
 
     tableBody.innerHTML = "";
 
-    const snapshot = await getDocs(collection(db, "pointages"));
+    const filtre = searchInput.value.trim();
+
+    let snapshot;
+
+    if (filtre === "") {
+
+        snapshot = await getDocs(collection(db, "pointages"));
+
+    } else {
+
+        const q = query(
+            collection(db, "pointages"),
+            where("name", "==", filtre)
+        );
+
+        snapshot = await getDocs(q);
+
+    }
 
     let pointages = [];
 
@@ -303,6 +320,7 @@ async function updateTable() {
             id: docSnap.id,
             ...docSnap.data()
         });
+
     });
 
     pointages.sort((a, b) => a.timestamp - b.timestamp);
@@ -333,18 +351,10 @@ async function updateTable() {
                 ligne.depart = p;
             }
         }
+
     });
-    const filtre = searchInput.value.trim().toLowerCase();
 
-const lignesFiltrees = lignes.filter(r => {
-
-    return (
-        r.name.toLowerCase().includes(filtre) ||
-        r.date.includes(filtre)
-    );
-
-});
-    lignesFiltrees.reverse().forEach(r => {
+    lignes.reverse().forEach(r => {
 
         const tr = document.createElement("tr");
 
@@ -385,13 +395,15 @@ const lignesFiltrees = lignes.filter(r => {
                 '${r.arrivee?.id || ""}',
                 '${r.depart?.id || ""}'
             )">
-            ❌
+                ❌
             </button>
         </td>
         `;
 
         tableBody.appendChild(tr);
+
     });
+
 }
 
 
