@@ -292,24 +292,9 @@ async function updateTable() {
 
     tableBody.innerHTML = "";
 
-const filtre = filterOperator.value;
-
-let snapshot;
-
-if (filtre === "") {
-
-    snapshot = await getDocs(collection(db, "pointages"));
-
-} else {
-
-    const q = query(
-        collection(db, "pointages"),
-        where("name", "==", filtre)
-    );
-
-    snapshot = await getDocs(q);
-
-}
+const snapshot = await getDocs(
+    collection(db, "pointages")
+);
 
     let pointages = [];
 
